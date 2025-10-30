@@ -1,0 +1,736 @@
+:root {
+    /* Colores base, manteniendo la consistencia con stylesheet2.css */
+    --primary-color: #388E3C; /* Verde esmeralda intenso */
+    --primary-light: #66BB6A; /* Tono más claro */
+    --secondary-color: #FFC107; /* Amarillo dorado */
+    --text-color: #333333;
+    --text-light: #555555;
+    --bg-color: #f8f9fa; /* Fondo más claro para el dashboard */
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --focus-glow: rgba(56, 142, 60, 0.2);
+
+    /* Degradado de fondo - Puedes usar el mismo que stylesheet2 o uno ligeramente modificado */
+    --gradient-start: #d4edda;
+    --gradient-end: #80c793;
+
+    /* Sombras */
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+    --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background-size: 200% 200%;
+    animation: gradientAnimation 15s ease infinite;
+    overflow-x: hidden; /* Evitar scroll horizontal */
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Cambiado a columna para que el logo esté encima de la nav */
+    align-items: center; /* Centrar elementos en el header */
+    padding: 20px 5%;
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow-light);
+    position: sticky; /* Sticky header */
+    top: 0;
+    z-index: 1000;
+    transform: translateY(-100%); /* Animación de entrada */
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s ease-out;
+}
+
+header.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Nueva clase para centrar el logo */
+.header-top-row {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centra el contenido (el logo) */
+    margin-bottom: 15px; /* Espacio entre el logo y la nav */
+    opacity: 0; /* Para la animación */
+    transform: translateY(-20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition-delay: 0.1s;
+}
+
+.header-top-row.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header-logo {
+    max-width: 150px; /* Un poco más grande para destacar al centro */
+    height: auto;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.1));
+    /* Eliminado el opacity y transform aquí ya que ahora los controla .header-top-row.show */
+}
+
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    transform: translateY(-20px); /* Animación de entrada */
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s ease-out;
+    transition-delay: 0.3s; /* Ligeramente después del logo */
+}
+
+.main-nav.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 1.05em;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+    width: 100%;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 25px; /* Espacio a la izquierda para separarlo de los nav-items */
+}
+
+.btn-logout i {
+    stroke-width: 2; /* Grosor del trazo del icono */
+}
+
+.btn-logout:hover {
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+    border-color: var(--primary-light);
+}
+
+/* Contenedor principal del dashboard */
+.dashboard-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr;
+    transform: translateY(30px); /* Animación de entrada */
+    opacity: 0;
+    transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1), opacity 1s ease-out;
+    transition-delay: 0.5s; /* Después del header y nav */
+}
+
+.dashboard-container.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Secciones generales */
+.welcome-section, .stats-overview, .recent-activity, .quick-links {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.welcome-section:hover, .stats-overview:hover, .recent-activity:hover, .quick-links:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Sección de Bienvenida */
+.welcome-section {
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 3em;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.welcome-subtitle {
+    font-size: 1.3em;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    background-image: linear-gradient(45deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.15em;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(56, 142, 60, 0.3);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-primary:hover {
+    background-image: linear-gradient(45deg, var(--secondary-color) 0%, #FFD740 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
+}
+
+.btn-primary i {
+    stroke-width: 2.5;
+}
+
+/* Estadísticas */
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.stat-card {
+    background-color: #f7fafc; /* Fondo más claro para tarjetas de stats */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-icon {
+    color: var(--primary-color);
+    font-size: 2.5em; /* Tamaño de icono */
+    stroke-width: 2;
+}
+
+.stat-value {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.stat-label {
+    font-size: 0.95em;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Actividad Reciente */
+.recent-activity h2 {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: #fefefe;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.activity-item:hover {
+    background-color: #f6f6f6;
+    transform: translateX(5px);
+}
+
+.activity-icon {
+    color: var(--primary-light);
+    font-size: 1.2em;
+    line-height: 1; /* Para alinear bien el icono */
+}
+
+.activity-text {
+    flex-grow: 1;
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+.activity-time {
+    font-size: 0.85em;
+    color: var(--text-light);
+    white-space: nowrap; /* Evita que el texto se rompa */
+}
+
+/* Enlaces Rápidos */
+.quick-links h2 {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.quick-link-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #f7fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1.05em;
+    gap: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.quick-link-card i {
+    color: var(--primary-light);
+    font-size: 2.2em;
+    stroke-width: 2;
+    transition: color 0.3s ease;
+}
+
+.quick-link-card:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(56, 142, 60, 0.2);
+}
+
+.quick-link-card:hover i {
+    color: white;
+}
+
+/* Estilos para el Modal QR */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Permanece encima de todo */
+    z-index: 1001; /* Z-index alto para estar encima del header */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilita scroll si el contenido es demasiado grande */
+    background-color: rgba(0,0,0,0.6); /* Fondo semi-transparente oscuro */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    backdrop-filter: blur(5px); /* Efecto de desenfoque en el fondo */
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: auto;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-medium);
+    width: 90%;
+    max-width: 450px; /* Ancho máximo para el modal */
+    text-align: center;
+    position: relative; /* Para el botón de cerrar */
+    animation: fadeInScale 0.3s ease-out; /* Animación al aparecer */
+}
+
+/* Modal grande para la lista de clientes y estadísticas */
+.modal-content.large-modal {
+    max-width: 900px; /* Ancho máximo más grande para gráficos */
+    padding: 30px;
+}
+
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-button {
+    color: var(--text-light);
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    font-size: 2.2em;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    color: var(--text-light);
+    font-size: 1em;
+    margin-bottom: 25px;
+}
+
+.qrcode-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 256px; /* Ancho fijo para el QR */
+    height: 256px; /* Alto fijo para el QR */
+    margin: 0px auto 25px auto; /* Centrar y margen inferior */
+    background-color: #ffffff; /* Fondo blanco para el QR */
+    padding: 10px; /* Pequeño padding para el borde */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Estilo para el enlace manual debajo del QR */
+.btn-qr-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-light);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.btn-qr-link:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* Estilos para la lista de clientes */
+.client-list-container {
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen al contenido */
+}
+
+.client-list-header {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr; /* Cliente, Email, Tokens, Interacciones */
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    font-weight: 700;
+    text-align: left;
+    gap: 10px;
+}
+
+.client-list {
+    max-height: 400px; /* Altura máxima para la lista con scroll */
+    overflow-y: auto;
+    background-color: #fefefe;
+}
+
+.client-item {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr;
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    gap: 10px;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.client-item:last-child {
+    border-bottom: none;
+}
+
+.client-item:hover {
+    background-color: #f6fdf6;
+}
+
+.client-item span {
+    color: var(--text-color);
+    font-size: 0.95em;
+    white-space: nowrap; /* Evita que el texto se rompa */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es muy largo */
+}
+
+/* NUEVOS ESTILOS PARA EL MODAL DE ESTADÍSTICAS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.stat-chart-card, .stat-summary-card {
+    background-color: #f7fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-chart-card:hover, .stat-summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-chart-card h3, .stat-summary-card h3 {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stat-chart-card canvas {
+    max-height: 300px; /* Altura máxima para los gráficos */
+    width: 100% !important; /* Asegura que Chart.js ocupe el ancho */
+    height: 100% !important; /* Asegura que Chart.js ocupe la altura */
+}
+
+.stat-summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item span:first-child {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.summary-item span:last-child {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+
+/* Media Queries para Responsividad */
+@media (min-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 2fr 1fr; /* Diseño de dos columnas */
+    }
+    .welcome-section {
+        grid-column: 1 / 3; /* Ocupa ambas columnas */
+    }
+    .stats-overview {
+        grid-column: 1 / 2; /* Ocupa la primera columna */
+    }
+    .recent-activity {
+        grid-column: 2 / 3; /* Ocupa la segunda columna */
+    }
+    .quick-links {
+        grid-column: 1 / 3; /* Ocupa ambas columnas */
+    }
+    header {
+        padding: 20px 8%;
+    }
+    .main-nav {
+        width: 100%; /* La nav ocupa todo el ancho disponible */
+        justify-content: center; /* Centra los items de la nav */
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr; /* Dos columnas para gráficos y resumen */
+    }
+    .stat-summary-card {
+        grid-column: 1 / 3; /* Ocupa ambas columnas debajo de los gráficos */
+    }
+}
+
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr 0.8fr; /* Dos gráficos y una columna más estrecha para el resumen */
+    }
+    .stat-summary-card {
+        grid-column: auto; /* Vuelve a su posición normal */
+    }
+}
+
+
+@media (max-width: 767px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 5%;
+    }
+    .header-top-row {
+        margin-bottom: 10px;
+    }
+    .header-logo {
+        max-width: 120px;
+    }
+    .main-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    .nav-item {
+        padding: 5px 10px;
+        font-size: 0.9em;
+    }
+    .btn-logout {
+        margin-top: 10px;
+        margin-left: 0; /* Eliminar margen para mejor centrado en móvil */
+        width: 100%; /* Ocupa todo el ancho en móvil */
+        justify-content: center; /* Centrar texto y icono */
+    }
+    .welcome-title {
+        font-size: 2.2em;
+    }
+    .welcome-subtitle {
+        font-size: 1em;
+    }
+    .btn-primary {
+        font-size: 1em;
+        padding: 12px 25px;
+    }
+    .stats-overview, .links-grid {
+        grid-template-columns: 1fr;
+    }
+    .stat-value {
+        font-size: 2em;
+    }
+    .stat-icon {
+        font-size: 2em;
+    }
+    .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .activity-time {
+        align-self: flex-end;
+    }
+    .modal-content {
+        padding: 25px;
+    }
+    .modal-content h2 {
+        font-size: 1.8em;
+    }
+    .modal-content p {
+        font-size: 0.9em;
+    }
+    .qrcode-placeholder {
+        width: 200px;
+        height: 200px;
+    }
+    .client-list-header,
+    .client-item {
+        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+        text-align: center;
+        padding: 10px;
+    }
+    .client-list-header span,
+    .client-item span {
+        white-space: normal; /* Permitir que el texto se envuelva */
+    }
+    .client-list-header span:not(:first-child),
+    .client-item span:not(:first-child) {
+        margin-top: 5px; /* Espacio entre elementos apilados */
+    }
+    /* Responsive para el modal de estadísticas en móviles */
+    .stats-grid {
+        grid-template-columns: 1fr; /* Una columna */
+    }
+    .stat-chart-card h3, .stat-summary-card h3 {
+        font-size: 1.3em;
+    }
+    .summary-item {
+        font-size: 1em;
+    }
+}

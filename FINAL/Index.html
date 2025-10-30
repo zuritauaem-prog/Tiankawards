@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinakAward</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="./stylesheet.css" rel="stylesheet"> <!-- CSS stylesheet local -->
+    
+</head>
+
+<body>
+    <header>
+        <img src="./imgs/logo-nobg.png" class="header-logo" alt="Logo TiankAwards">
+    </header>
+
+    <div class="login-container">
+        <h2>TiankAwards</h2>
+        <form id="walletConnectForm">
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" placeholder="tu@ejemplo.com" required>
+            </div>
+            <button type="submit" class="btn-connect">Ingresar con Wallet</button>
+        </form>
+        <button type="button" class="btn-create-account" id="createAccountBtn">
+         Crear Cuenta
+        </button>
+    </div>
+
+    <script src="https://unpkg.com/@stellar/freighter-api@latest/dist/freighter.min.js"></script>
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.login-container').classList.add('show');
+                document.querySelector('.header-logo').classList.add('show');
+            }, 100);
+
+            document.getElementById('walletConnectForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+
+                try {
+                    const walletInfo = await connectWallet(); // Conectar wallet sin pasar email por seguridad
+                    const stellarPublicKey = walletInfo.address;
+
+                    // Enviar datos al backend para login
+                    const response = await fetch('http://localhost:3000/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, stellarPublicKey })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message + ` ¡Bienvenido, ${data.user.username}!`);
+                        // Simular sesión de usuario en localStorage para pruebas locales
+                        localStorage.setItem('currentUser', JSON.stringify(data.user));
+                        
+                        // Redirigir según el tipo de cuenta
+                        if (data.user.accountType === 'empresa') {
+                            window.location.href = 'Account_Empresa.html';
+                        } else {
+                            window.location.href = 'account_cliente.html';
+                        }
+                    } else {
+                        alert(`Error en el login: ${data.message}`);
+                    }
+
+                } catch (error) {
+                    console.error("Error durante el login o conexión a la wallet:", error);
+                    alert(`Error: ${error.message}. Por favor, verifica tu proveedor Web3 de Stellar (Freighter) y tus credenciales.`);
+                }
+            });
+
+            document.getElementById('createAccountBtn').addEventListener('click', function() {
+                window.location.href = 'create-account.html';
+            });
+        });
+
+        async function connectWallet() { // Ya no recibe email como argumento
+            console.log("Intentando conectar con la wallet Web3 de Stellar (Freighter)...");
+
+            if (window.freighterApi) {
+                try {
+                    const publicKey = await window.freighterApi.getPublicKey();
+                    console.log("Wallet Stellar conectada (Public Key):", publicKey);
+                    return { success: true, address: publicKey }; // Solo devuelve la clave pública
+
+                } catch (error) {
+                    if (error.message.includes("User declined the connection")) {
+                        throw new Error("Conexión a la wallet Stellar rechazada por el usuario.");
+                    } else {
+                        throw new Error(`Error al conectar con la wallet Stellar: ${error.message}`);
+                    }
+                }
+            } else {
+                throw new Error("No se detectó el proveedor de Stellar (Freighter). Por favor, instala la extensión.");
+            }
+        }
+    </script>
+</body>
+</html>
+

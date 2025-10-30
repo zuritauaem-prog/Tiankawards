@@ -1,0 +1,279 @@
+:root {
+    /* Paleta de colores más vibrante y complementaria */
+    --primary-color: #388E3C; /* Verde esmeralda intenso y energizante */
+    --primary-light: #66BB6A; /* Tono más claro para detalles */
+    --secondary-color: #FFC107; /* Amarillo dorado, excelente contraste para hover y acentos */
+    --text-color: #333333; /* Casi negro para alta legibilidad */
+    --text-light: #555555; /* Para subtítulos o texto secundario */
+    --bg-color: #ffffff; /* Fondo sutilmente gris-azulado */
+    --card-bg: #ffffff; /* Blanco puro para la tarjeta, que destaque */
+    --border-color: #e0e0e0; /* Borde suave para inputs */
+    --focus-glow: rgba(56, 142, 60, 0.4); /* Sombra de enfoque con color primario */
+
+    /* Degradado de fondo con más profundidad */
+    --gradient-start: #d4edda; /* Verde pastel suave */
+    --gradient-end: #80c793; /* Verde más profundo y orgánico */
+
+    /* Sombras mejoradas */
+    --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 12px 30px rgba(0, 0, 0, 0.15);
+    --shadow-button: 0 8px 25px rgba(56, 142, 60, 0.4); /* Sombra para botones primarios */
+    --shadow-button-hover: 0 15px 35px rgba(255, 193, 7, 0.6); /* Sombra intensa para hover */
+
+        /* Nuevos colores para el degradado de fondo */
+    --gradient-start: #d2efd0; /* Gris claro */
+    --gradient-end: #6ed875; /* Blanco puro */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background-size: 200% 200%; /* Para una animación de fondo sutil */
+    animation: gradientAnimation 15s ease infinite; /* Animación de fondo */
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 0; /* Más padding */
+    margin-bottom: 25px; /* Más espacio */
+    position: relative;
+    z-index: 10;
+}
+
+.header-logo {
+    max-width: 130px; /* Un poco más grande para destacar */
+    height: auto;
+    display: block;
+    opacity: 0;
+    transform: translateY(-40px); /* Empieza más arriba */
+    animation: none;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); /* Sombra para el logo */
+}
+
+.header-logo.show {
+    animation: fadeIn 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards; /* Curva de animación más suave */
+    animation-delay: 0.2s;
+}
+
+/* Contenedor principal para ambas páginas */
+.login-container,
+.create-account-container {
+    background-color: var(--card-bg);
+    padding: 50px; /* Más padding interno */
+    border-radius: 20px; /* Bordes aún más redondeados */
+    box-shadow: var(--shadow-medium); /* Sombra más grande y pulida */
+    text-align: center;
+    width: 100%;
+    max-width: 480px; /* Ancho más generoso */
+    box-sizing: border-box;
+    border: none;
+    opacity: 0;
+    transform: translateY(50px); /* Empieza más abajo */
+    transition: opacity 1s cubic-bezier(0.23, 1, 0.32, 1), transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.login-container.show,
+.create-account-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.login-container h2,
+.create-account-container h2 {
+    margin-bottom: 40px; /* Más espacio */
+    color: var(--primary-color);
+    font-size: 2.8em; /* Título principal aún más grande */
+    font-weight: 900; /* Extra extra audaz */
+    letter-spacing: -0.8px;
+    line-height: 1.1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Sombra de texto sutil */
+}
+
+.create-account-container h3 {
+    margin-bottom: 30px;
+    color: var(--text-light); /* Un tono más suave para el subtítulo */
+    font-size: 1.6em;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.form-group {
+    margin-bottom: 30px; /* Más espacio entre grupos */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 12px; /* Más espacio */
+    font-weight: 700; /* Más audaz */
+    color: var(--text-color);
+    font-size: 1em; /* Ajustado para mejor legibilidad */
+}
+
+.form-group input[type="email"],
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 16px 20px; /* Aún más padding */
+    border: 1px solid var(--border-color);
+    border-radius: 12px; /* Bordes más redondeados en inputs */
+    font-size: 1.1em; /* Texto más grande */
+    box-sizing: border-box;
+    background-color: #fcfcfc; /* Fondo ligeramente gris para inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.form-group input[type="email"]:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: var(--primary-light); /* Borde de enfoque más suave */
+    outline: none;
+    box-shadow: 0 0 0 5px var(--focus-glow); /* Glow más prominente */
+    background-color: #ffffff; /* Blanco en foco */
+}
+
+/* Botones generales (conectar y seleccionar tipo) */
+.btn-connect,
+.btn-select-type {
+    width: 100%;
+    padding: 18px 30px; /* Mucho más padding */
+    background-image: linear-gradient(45deg, var(--primary-color) 0%, var(--primary-light) 100%); /* Degradado en botón */
+    color: white;
+    border: none;
+    border-radius: 12px; /* Bordes más redondeados */
+    font-size: 1.3em; /* Texto más grande */
+    font-weight: 800; /* Extra audaz */
+    cursor: pointer;
+    letter-spacing: 0.5px; /* Espaciado entre letras */
+    text-transform: uppercase; /* Mayúsculas para un look más impactante */
+    box-shadow: var(--shadow-button); /* Sombra predefinida */
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); /* Transición suave para todo */
+    -webkit-tap-highlight-color: transparent; /* Evita el resalte azul en móviles */
+}
+
+.btn-connect:hover,
+.btn-select-type:hover {
+    background-image: linear-gradient(45deg, var(--secondary-color) 0%, #FFD740 100%); /* Degradado dorado al hover */
+    transform: translateY(-5px) scale(1.02); /* Más elevación y un ligero crecimiento */
+    box-shadow: var(--shadow-button-hover); /* Sombra intensa para el hover */
+}
+
+.btn-connect:active,
+.btn-select-type:active {
+    transform: translateY(0) scale(0.98); /* Presiona ligeramente */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón de "Crear Cuenta" (del index.html) */
+.btn-create-account {
+    width: 100%;
+    padding: 15px 25px;
+    margin-top: 25px; /* Más espacio */
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    font-size: 1.15em;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.btn-create-account:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(56, 142, 60, 0.3);
+}
+
+.btn-create-account:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(56, 142, 60, 0.2);
+}
+
+/* Estilos específicos para el grupo de botones de selección de tipo */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Más espacio entre los botones */
+    margin-top: 35px; /* Más margen superior */
+}
+
+.button-group .btn-select-type {
+    width: 100%;
+    padding: 20px 30px; /* Aún más padding para ser más prominentes */
+    font-size: 1.4em; /* Texto aún más grande */
+    letter-spacing: 0.8px;
+}
+
+/* Botón de "Volver" */
+.btn-back {
+    width: 100%;
+    padding: 14px 25px;
+    margin-top: 30px; /* Ajuste para que se vea mejor */
+    background-color: #e9ecef; /* Un gris azulado suave */
+    color: var(--text-light);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: none; /* No mayúsculas */
+    letter-spacing: normal;
+}
+
+.btn-back:hover {
+    background-color: #d0d7dd; /* Un gris más oscuro al hover */
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Secciones de formulario (para animación) */
+.form-section {
+    opacity: 0;
+    transform: translateY(30px); /* Empieza más abajo */
+    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.form-section.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

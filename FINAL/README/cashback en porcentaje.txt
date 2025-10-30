@@ -1,0 +1,8 @@
+cashback en porcentaje
+
+en ticket aparece el código QR
+
+
+cantidad de clientes por semana, datos, aumentos y decremento
+
+en clientes se organiza por actividad

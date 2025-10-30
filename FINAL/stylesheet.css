@@ -1,0 +1,170 @@
+:root {
+    --primary-color: hsl(97, 59%, 56%); /* Un tono de púrpura moderno */
+    --text-color: #333;
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --hover-color: #D4AF37; /* Dorado para el hover */
+
+    /* Nuevos colores para el degradado de fondo */
+    --gradient-start: #d2efd0; /* Gris claro */
+    --gradient-end: #6ed875; /* Blanco puro */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+    overflow: hidden;
+
+    /* Degradado de fondo */
+    background: linear-gradient(135deg, var(--gradient-start) 20%, var(--gradient-end) 100%);
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.header-logo {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: none;
+    background-color: transparent;
+}
+
+.header-logo.show {
+    animation: fadeIn 1s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+.login-container {
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada para un look elegante */
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.login-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    font-size: 2.2em; /* Un poco más grande */
+    font-weight: 700; /* Más audaz */
+}
+
+.form-group {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="email"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(139, 46, 46, 0.2); /* Sombra con el color primario */
+}
+
+.btn-connect {
+    width: 100%;
+    padding: 14px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 46, 46, 0.3); /* Sombra más fuerte */
+}
+
+.btn-connect:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-3px); /* Un poco más de elevación */
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); /* Sombra con el color dorado */
+}
+
+.btn-connect:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(139, 46, 46, 0.2);
+}
+
+.btn-create-account {
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 15px;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-create-account:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(139, 46, 46, 0.2);
+}
+
+.btn-create-account:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(139, 46, 46, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

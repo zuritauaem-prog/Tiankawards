@@ -1,0 +1,257 @@
+    
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Empresa - TinakAward</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="./stylesheet3.css" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-top-row">
+            <img src="./imgs/Logotipo_Horizontal.png" class="header-logo" alt="Logo TinakAwards">
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <a href="#" class="nav-item active">Inicio</a>
+        <a href="#" class="nav-item">Mi suscripcion</a>
+        <a href="#" class="nav-item">Configuración</a>
+        <button class="btn-logout" id="logoutBtn">
+            <i data-feather="log-out"></i> Cerrar Sesión
+        </button>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bienvenido, <span id="companyName">Nombre de Empresa</span></h1>
+            <p class="welcome-subtitle">Gestiona tus clientes y sigue tu progreso.</p>
+            <button class="btn-primary" id="registerNewClientBtn">
+                <i data-feather="user-plus"></i> Registrar Nuevo Cliente
+            </button>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <i data-feather="award" class="stat-icon"></i>
+                <span class="stat-value" id="activeClientsCount">0</span>
+                <span class="stat-label">Clientes Activos</span>
+            </div>
+            <div class="stat-card">
+                <i data-feather="users" class="stat-icon"></i>
+                <span class="stat-value">0</span>
+                <span class="stat-label">Puntos otorgados</span>
+            </div>
+            <div class="stat-card">
+                <i data-feather="dollar-sign" class="stat-icon"></i>
+                <span class="stat-value">0</span>
+                <span class="stat-label">Puntos</span>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h2>Actividad Reciente</h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-icon"><i data-feather="check-circle"></i></span>
+                    <span class="activity-text">Se añadió nuevo cliente.</span>
+                    <span class="activity-time">Hace 2 horas</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon"><i data-feather="user-plus"></i></span>
+                    <span class="activity-text">Se añadió nuevo cliente.</span>
+                    <span class="activity-time">Hace 1 día</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon"><i data-feather="upload-cloud"></i></span>
+                    <span class="activity-text">Se añadió nuevo cliente.</span>
+                    <span class="activity-time">Hace 3 días</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h2>Acciones Rápidas</h2>
+            <div class="links-grid">
+                <a href="#" class="quick-link-card" id="viewAllClientsBtn">
+                    <i data-feather="briefcase"></i>
+                    <span>Ver Todos los Clientes</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <i data-feather="bar-chart-2"></i>
+                    <span>Ver Estadísticas</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <i data-feather="message-square"></i>
+                    <span>Soporte</span>
+                </a>
+                <a href="#" class="quick-link-card">
+                    <i data-feather="settings"></i>
+                    <span>Ajustes de Cuenta</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para el código QR -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeQrModal">&times;</span>
+            <h2>Escanea para Registrarte</h2>
+            <p>Pide a tu cliente que escanee este código para crear una cuenta.</p>
+            <div id="qrcode" class="qrcode-placeholder"></div>
+            <a id="qrLink" href="index.html" target="_blank" class="btn-qr-link">Ir a la página de registro</a>
+        </div>
+    </div>
+
+    <!-- Nuevo Modal para la Lista de Clientes -->
+    <div id="clientsModal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close-button" id="closeClientsModal">&times;</span>
+            <h2>Clientes Registrados</h2>
+            <p>Lista de clientes activos, ordenados por actividad.</p>
+            <div class="client-list-container">
+                <div class="client-list-header">
+                    <span>Cliente</span>
+                    <span>Correo Electrónico</span>
+                    <span>Clave Pública Stellar</span>
+                    <!-- <span>Tokens Comprados</span> Si manejas tokens específicos -->
+                    <!-- <span>Interacciones</span> -->
+                </div>
+                <div id="clientsList" class="client-list">
+                    <!-- Los clientes se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+
+            // Cargar datos del usuario desde localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!currentUser || currentUser.accountType !== 'empresa') {
+                alert('No autorizado o sesión expirada. Por favor, inicia sesión como empresa.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Mostrar nombre de la empresa
+            document.getElementById('companyName').textContent = currentUser.username; // Usamos username como nombre de la empresa
+
+            // Animación al cargar
+            setTimeout(() => {
+                document.querySelector('.header-top-row').classList.add('show');
+                document.querySelector('.main-nav').classList.add('show');
+                document.querySelector('.dashboard-container').classList.add('show');
+            }, 100);
+
+            // Funcionalidad del botón de logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('currentUser'); // Limpiar sesión
+                alert('Cerrando sesión...');
+                window.location.href = 'index.html';
+            });
+
+            // Lógica del Modal QR
+            const qrModal = document.getElementById('qrModal');
+            const registerNewClientBtn = document.getElementById('registerNewClientBtn');
+            const closeQrModalBtn = document.getElementById('closeQrModal');
+            const qrCodeDiv = document.getElementById('qrcode');
+            const qrLink = document.getElementById('qrLink');
+
+            const registrationURL = window.location.origin + '/create-account.html?type=cliente'; // Enlace directo a crear cuenta de cliente
+            qrLink.href = registrationURL;
+
+            registerNewClientBtn.addEventListener('click', () => {
+                qrModal.style.display = 'flex';
+                qrCodeDiv.innerHTML = '';
+                new QRCode(qrCodeDiv, {
+                    text: registrationURL,
+                    width: 256,
+                    height: 256,
+                    colorDark : "#388E3C",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            });
+
+            closeQrModalBtn.addEventListener('click', () => {
+                qrModal.style.display = 'none';
+            });
+
+            // Lógica del Modal de Clientes
+            const clientsModal = document.getElementById('clientsModal');
+            const viewAllClientsBtn = document.getElementById('viewAllClientsBtn');
+            const closeClientsModalBtn = document.getElementById('closeClientsModal');
+            const clientsList = document.getElementById('clientsList');
+
+            viewAllClientsBtn.addEventListener('click', async (event) => {
+                event.preventDefault();
+                clientsModal.style.display = 'flex';
+                await loadClients(); // Carga y muestra los clientes del backend
+            });
+
+            closeClientsModalBtn.addEventListener('click', () => {
+                clientsModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == qrModal) {
+                    qrModal.style.display = 'none';
+                }
+                if (event.target == clientsModal) {
+                    clientsModal.style.display = 'none';
+                }
+            });
+
+            async function loadClients() {
+                try {
+                    const response = await fetch('http://localhost:3000/api/clients');
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        const clients = data.clients;
+                        document.getElementById('activeClientsCount').textContent = clients.length; // Actualizar contador
+
+                        clientsList.innerHTML = '';
+                        if (clients.length === 0) {
+                            clientsList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-light);">No hay clientes registrados aún.</div>';
+                        } else {
+                            clients.forEach(client => {
+                                const clientItem = document.createElement('div');
+                                clientItem.classList.add('client-item');
+                                clientItem.innerHTML = `
+                                    <span>${client.username}</span>
+                                    <span>${client.email}</span>
+                                    <span>${client.stellarPublicKey.substring(0, 8)}...${client.stellarPublicKey.substring(client.stellarPublicKey.length - 8)}</span>
+                                `;
+                                clientsList.appendChild(clientItem);
+                            });
+                        }
+                    } else {
+                        alert(`Error al cargar clientes: ${data.message}`);
+                    }
+                } catch (error) {
+                    console.error("Error al obtener clientes del backend:", error);
+                    alert("No se pudieron cargar los clientes. Asegúrate de que el backend esté funcionando.");
+                }
+                feather.replace();
+            }
+
+            // Cargar clientes al inicio para actualizar el contador
+            loadClients();
+        });
+    </script>
+</body>
+</html>
+
+  
